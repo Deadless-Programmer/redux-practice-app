@@ -1,16 +1,26 @@
-import AuthStatus from "./components/AuthStatus";
-import Cards from "./components/Cards";
-import Counter from "./components/Counter";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
+import RegisterPage from "./pages/RegisterPage";
+import Home from "./pages/Home";
 
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center">
-      {/* <Counter /> */}
-      {/* <AuthStatus/> */}
-
-      <Cards/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegisterPage/>} />
+        <Route 
+          path="/dashboard" 
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } 
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
