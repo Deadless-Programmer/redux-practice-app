@@ -1,27 +1,34 @@
+// LoginPage.jsx
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../firebase";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
-import { useLocation, useNavigate } from "react-router-dom";
-
 
 export default function LoginPage() {
-  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-const location_path = useLocation();
-const from = location_path.state?.from?.pathname ||'/';
+  const location_path = useLocation();
+  const from = location_path.state?.from?.pathname || '/';
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-     await signInWithEmailAndPassword(auth, email, password);
- 
-      navigate(from,{replace:true});
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate(from, { replace: true });
     } catch (err) {
       setError("Invalid credentials");
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError("Google sign-in failed");
+      console.error(err);
     }
   };
 
@@ -57,8 +64,17 @@ const from = location_path.state?.from?.pathname ||'/';
         >
           Login
         </button>
+
+        <div className="mt-4 text-center">
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-md"
+          >
+            Sign in with Google
+          </button>
+        </div>
       </form>
     </div>
   );
 }
-
